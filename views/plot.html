@@ -20,7 +20,8 @@
         <!--Import materialize.css-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
         <script>
-            var socket = io.connect('http://localhost:3030'); //connect to server
+            var serverURL = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+            var socket = io.connect(serverURL); //connect to server
 
             var ctx = document.getElementById('myChart').getContext('2d');
             var chart = new Chart(ctx, {
@@ -32,11 +33,11 @@
                 labels: [],
                 datasets: [{
                     label: "Voltage",
-                    borderColor: "#FF5733",
+                    borderColor: "#ff8a65",
                     data: [],
                     fill: false,
                     pointStyle: 'circle',
-                    backgroundColor: '#3498DB',
+                    backgroundColor: '#03a9f4',
                     pointRadius: 5,
                     pointHoverRadius: 7,
                     lineTension: 0,

@@ -111,6 +111,16 @@ express.get('/plot', (req, res) => {
                         console.log(record);
                         //send information to client
                         io.sockets.emit('learning', {voltage:maxSampleVolt, prediction:record}); //emit data to clients
+                        // check if prediction is not null to learn from it.
+                        if (record.X != null) {
+                            db.run('INSERT INTO movement(time,voltage,wristX,wristY,distance,angle,velocity) VALUES(?,?,?,?,?,?,?)', [Date.now(), maxSampleVolt, record.X, record.Y, record.distance, record.angle, record.velocity], (err) => {
+                                if(err) {
+                                    return console.log(err.message); 
+                                }
+                                console.log('Row was added to the table: ${this.lastID}');
+                            });
+                        }
+                        // insert results as new record
                     });
                 });
             }
