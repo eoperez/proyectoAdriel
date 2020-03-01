@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Voltage Impulse Plot</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <div class="chart-container" style="position: relative;width:55vw; margin: auto;">
+            <canvas id="myChart"></canvas>
+        </div>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <!--JavaScript at end of body for optimized loading-->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+        <script>
+            var socket = io.connect('http://localhost:3030'); //connect to server
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                labels: [],
+                datasets: [{
+                    label: "Voltage",
+                    borderColor: "#FF5733",
+                    data: [],
+                    fill: false,
+                    pointStyle: 'circle',
+                    backgroundColor: '#3498DB',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    lineTension: 0,
+                }]
+                },
+
+                // Configuration options go here
+                options: {}
+                
+            });
+
+            socket.on('reading', function(data) { //As a reading data is received 
+                console.log(data.voltageReading);
+                if(chart.data.labels.length != 50) { //If we have less than 300 data points in the graph
+                    chart.data.labels.push(data.time);  //Add time in x-asix
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(data.voltageReading); //Add voltageReading in y-axis
+                    });
+                }
+                else { //If there are already 15 data points in the graph.
+                    chart.data.labels.shift(); //Remove first time data
+                    chart.data.labels.push(data.time); //Insert latest time data
+                    chart.data.datasets.forEach((dataset) => {
+                        dataset.data.shift(); //Remove first voltageReading data
+                        dataset.data.push(data.voltageReading); //Insert latest voltageReading data
+                    });
+                }
+                $("#stimulation").html(data.voltageReading);
+                chart.update(); //Update the graph.
+            });
+            socket.on('learning', function(data){
+                console.log(data);
+                $("#x").html((data.prediction.X == null) ? 'Value not found' : data.prediction.X);
+                $("#y").html((data.prediction.Y == null) ? 'Value not found' : data.prediction.Y);
+                $("#distance").html((data.prediction.distance == null) ? 'Value not found' : data.prediction.distance);
+                $("#direction").html((data.prediction.angle == null) ? 'Value not found' : data.prediction.angle);
+                $("#velocity").html((data.prediction.velocity == null) ? 'Value not found' : data.prediction.velocity);
+            });
+        </script>
+        <div class="container">
+            <div class="row">
+                <div class="col s6">
+                    <ul class="collection">
+                        <li class="collection-item avatar">
+                          <i class="material-icons circle cyan darken-1">flash_on</i>
+                          <span class="title">Stimulation</span>
+                          <p id="stimulation">&nbsp;</p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-icons circle light-green">clear</i>
+                            <span class="title">Wrist X Position</span>
+                            <p id="x">&nbsp;</p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <i class="material-icons circle amber">call_split</i>
+                            <span class="title">Wrist Y Position</span>
+                            <p id="y">&nbsp;</p>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle light-blue darken-3">settings_ethernet</i>
+                            <span class="title">Distance</span>
+                            <p id="distance">&nbsp;</p>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle deep-orange darken-1">call_missed_outgoing</i>
+                            <span class="title">Direction</span>
+                            <p id="direction">&nbsp;</p>
+                          </li>
+                          <li class="collection-item avatar">
+                            <i class="material-icons circle brown darken-2">transfer_within_a_station</i>
+                            <span class="title">Velocity</span>
+                            <p id="velocity">&nbsp;</p>
+                          </li>
+                    </ul>
+                </div>
+                <div class="col s6"></div>
+            </div>
+        </div>
+        <style>
+            .collection .collection-item.avatar {
+                min-height: 8px !important;
+            }
+            .collection p{
+                color: #ff6d00;
+                font-size: 95%;
+            }
+        </style>
+    </body>
+</html>

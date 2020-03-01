@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  </head>
+
+  <body>
+    <h3 class="center-align">Electrical Stimulation Machine Learning</h3>
+    <div class="container center-align">
+        <form action="/plot" method="GET" target="plot">
+            <div class="row teal lighten-5" style="padding: 5px;">
+                <div class="input-field col s4">
+                    <select name="commPort">
+                        <option value="" disabled selected>Choose your option</option>
+                        {{#availablePorts}}
+                            <option value="{{path}}">{{path}} {{manufacturer}}</option>
+  		                    <li></li>
+                        {{/availablePorts}}
+                      </select>
+                      <label>Comm Port</label>
+                </div>
+                <div class="input-field col s1">
+                    <input placeholder="{{calibration}}" id="calibration" type="text" class="validate" name="calibration">
+                    <label for="calibration">Calibration</label>
+                </div>
+                <div class="input-field col s1">
+                    <input placeholder="{{sample}}" id="sample" type="text" class="validate" name="sample">
+                    <label for="sample">Samples</label>
+                </div>
+                <div class="input-field col s1">
+                    <input placeholder="{{voltageTolerance}}" id="tolerance" type="text" class="validate" name="voltageTolerance">
+                    <label for="tolerance">Tolerance</label>
+                </div>
+                <div class="input-field col s1"></div>
+                <div class="col s2">
+                    <label for="isLearnMode">Learn Mode</label>
+                    <!-- Switch -->
+                    <div class="switch">
+                        <label>
+                        Off
+                        <input type="checkbox" name="isLearnMode" id="isLearnMode">
+                        <span class="lever"></span>
+                        On
+                        </label>
+                    </div>
+                </div>
+                <div class="input-field col s2">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Save
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div> <iframe src="/plot" id="plot" name="plot" scrolling="no" frameborder="0" style="position: relative; height: 55vw; width: 100%;"></iframe> </div>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('select').material_select();
+        });
+    </script>
+  </body>
+</html>
