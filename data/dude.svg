@@ -17,6 +17,15 @@
   <rect stroke="#000" rx="5" id="svg_36" height="17.00035" width="43.0009" y="350.00331" x="126.49924" stroke-opacity="null" stroke-width="0" fill="#ff7f00"/>
  </g>
  
- <rect fill="#eac383" stroke-width="0" x="134.66319" y="151.5042" width="18.44226" height="70.90319" id="forearm" rx="11" transform="rotate(-0.485669 143.884 186.956)" stroke="#c4993d"/>
- <!-- <circle fill="red" cx="143px" cy="152" r="5" /> -->
+ <rect fill="#eac383" stroke-width="0" x="134.66319" y="151.5042" width="18.44226" height="70.90319" id="forearm" rx="11" transform="rotate(-0.485669 143.884 186.956)" stroke="#c4993d">
+ <animateTransform
+    attributeName="transform"
+    type="rotate"
+    from="0 143 160"
+    to="-160 143 160"
+    dur="4s"
+    repeatCount="1" 
+    fill="freeze"
+    />
+ </rect>
 </svg>
